@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_cs_cargo" value="name:cargo_id;datatype:int,name:cargo_nome;datatype:string" />
+</info>

@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_cs_usuario" value="name:ac_id;datatype:int,name:ac_data;datatype:date,name:ac_nome;datatype:string,name:ac_nivelAcesso;datatype:int,name:ac_email;datatype:string,name:ac_chave;datatype:string,name:ac_situacao;datatype:int,name:ac_cadastrador;datatype:string" />
+	<infoitem key="UD_cs_curriculo" value="name:arq_id;datatype:int,name:arq_data;datatype:date,name:arq_nome;datatype:string,name:arq_fone;datatype:string,name:arq_curriculo;datatype:blob,name:arq_diretorio;datatype:string" />
+</info>
