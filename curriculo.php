@@ -108,7 +108,7 @@ $totalRows_cs_cargo = mysql_num_rows($cs_cargo);
           <li class="menu-active"><a href="index.php">Inicio</a></li>
           <li><a href="index.php">A Empresa</a></li>
           <li><a href="index.php">Produtos</a></li>
-          <li><a href="#">Administra</a></li>
+          <li><a href="administra.php">Administra</a></li>
           <li><a href="index.php">Contato</a></li>
         </ul>
       </nav><!-- #nav-menu-container -->
