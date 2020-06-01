@@ -1,8 +1,3 @@
-<?php
-  //Inicializado primeira a sessão para posteriormente recuperar valores das variáveis globais. 
-    session_start();
-?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -11,7 +6,8 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
       <script async src="https://www.googletagmanager.com/gtag/js?id=UA-72548584-1"></script>
-      <script>
+      <script src="SpryAssets/SpryValidationTextField.js" type="text/javascript"></script>
+    <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
@@ -44,11 +40,16 @@
   <link href="assets/vendor/venobox/venobox.css" rel="stylesheet">
   <link href="assets/vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
 
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
 
   <script src='https://www.google.com/recaptcha/api.js'></script>
 
+<link href="SpryAssets/SpryValidationTextField.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -165,70 +166,41 @@
 
   <main id="main">
 
-    <!-- ======= Featured Services Section Section ======= -->
-    <!--
-    <section id="featured-services">
-      <div class="container">
-        <div class="row">
-
-          <div class="col-lg-4 box">
-            <i class="ion-ios-bookmarks-outline"></i>
-            <h4 class="title"><a href="">Titulo 01</a></h4>
-            <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident</p>
-          </div>
-
-          <div class="col-lg-4 box box-bg">
-            <i class="ion-ios-bookmarks-outline"></i>
-            <h4 class="title"><a href="">Titulo 02</a></h4>
-            <p class="description">Minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat tarad limino ata</p>
-          </div>
-
-          <div class="col-lg-4 box">
-            <i class="ion-ios-bookmarks-outline"></i>
-            <h4 class="title"><a href="">Titulo 03</a></h4>
-            <p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
-          </div>
-
-        </div>
-      </div>
-    </section>
-    -->
     <!-- ======= Contact Section ======= -->
     <section id="contact" class="section-bg wow fadeInUp">
-      <div class="container">
-
-        <div class="section-header">
-          <h3>Acesso Restrito</h3>
+      <div id="login">
+        <div class="container">
+            <div id="login-row" class="row justify-content-center align-items-center">
+                <div id="login-column" class="col-md-6">
+                    <div id="login-box" class="col-md-12">
+                        <form id="login-form" class="form" method="POST" action="">
+                            <h3 class="text-center text-info">Acesso Restrito</h3>
+                            <div class="form-group">
+                                <label for="email" class="text-info">Email:</label><br>
+                                <span id="sprytextfield1">
+                              <input type="text" name="email" id="email" size="35" maxlength="80">
+                            <span class="textfieldRequiredMsg">Um valor é necessário.</span><span class="textfieldInvalidFormatMsg">Formato inválido.</span></span> </div>
+                            <div class="form-group">
+                                <p>
+                                  <label for="password" class="text-info">Senha:</label>
+                                  <br>
+                                  <span id="sprytextfield2">
+                                  <input name="senha" type="password" id="senha" size="35" maxlength="20">
+                                  <span class="textfieldRequiredMsg">Um valor é necessário.</span><span class="textfieldMaxCharsMsg">Limite 20 caracteres.</span></span><br>
+                                </p>
+                             </div>
+                            <div class="form-group">
+        <!--     
+                                <div class="g-recaptcha" id="grecaptcha" data-sitekey="6LdQWbgUAAAAAGwj9TuXBsCwxBn_rZSr4SXlbftA"></div>
+                                    <br>-->
+                                    <input type="submit" name="entrar" id="entrar" class="btn btn-info btn-md" value="Acessar">
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="form">
-          <!-- Criado o formulário para o usuário colocar os dados de acesso.  -->
-        <form method="POST" action="acesso.php">
-            <label>Email</label>
-            <input type="email" name="email" placeholder="Email" required autofocus>
-            <label>Senha</label>
-            <input type="password" name="senha" placeholder="Senha" required>
-            <button type="submit">Acessar</button>
-        </form>
-          <p>
-            <?php 
-            //Recuperando o valor da variável global, os erro de login.
-            if(isset($_SESSION['loginErro'])){
-               echo $_SESSION['loginErro'];
-               unset($_SESSION['loginErro']);
-                  }?>
-              </p>
-              <p>
-                  <?php 
-            //Recuperando o valor da variável global, deslogado com sucesso.
-                  if(isset($_SESSION['logindeslogado'])){
-                    echo $_SESSION['logindeslogado'];
-                    unset($_SESSION['logindeslogado']);
-                  }
-                  ?>
-              </p>
-        </div>
-
-      </div>
+    </div>
     </section><!-- End Contact Section -->
 
   </main><!-- End #main -->
@@ -316,7 +288,10 @@
   <script src="assets/js/main.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
-
+<script type="text/javascript">
+var sprytextfield1 = new Spry.Widget.ValidationTextField("sprytextfield1", "email", {validateOn:["blur"], useCharacterMasking:true});
+var sprytextfield2 = new Spry.Widget.ValidationTextField("sprytextfield2", "none", {validateOn:["blur"], maxChars:20});
+</script>
 </body>
 
 </html>

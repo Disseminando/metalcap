@@ -1,4 +1,78 @@
-<?php require_once('Connections/con01.php'); ?>
+<?php
+require_once('Connections/con01.php');
+
+//initialize the session
+if (!isset($_SESSION)) {
+  session_start();
+}
+
+// ** Logout the current user. **
+$logoutAction = $_SERVER['PHP_SELF']."?doLogout=true";
+if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")){
+  $logoutAction .="&". htmlentities($_SERVER['QUERY_STRING']);
+}
+
+if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
+  //to fully log out a visitor we need to clear the session varialbles
+  $_SESSION['MM_Username'] = NULL;
+  $_SESSION['MM_UserGroup'] = NULL;
+  $_SESSION['PrevUrl'] = NULL;
+  unset($_SESSION['MM_Username']);
+  unset($_SESSION['MM_UserGroup']);
+  unset($_SESSION['PrevUrl']);
+	
+  $logoutGoTo = "index.php";
+  if ($logoutGoTo) {
+    header("Location: $logoutGoTo");
+    exit;
+  }
+}
+?>
+<?php
+if (!isset($_SESSION)) {
+  session_start();
+}
+$MM_authorizedUsers = "";
+$MM_donotCheckaccess = "true";
+
+// *** Restrict Access To Page: Grant or deny access to this page
+function isAuthorized($strUsers, $strGroups, $UserName, $UserGroup) { 
+  // For security, start by assuming the visitor is NOT authorized. 
+  $isValid = False; 
+
+  // When a visitor has logged into this site, the Session variable MM_Username set equal to their username. 
+  // Therefore, we know that a user is NOT logged in if that Session variable is blank. 
+  if (!empty($UserName)) { 
+    // Besides being logged in, you may restrict access to only certain users based on an ID established when they login. 
+    // Parse the strings into arrays. 
+    $arrUsers = Explode(",", $strUsers); 
+    $arrGroups = Explode(",", $strGroups); 
+    if (in_array($UserName, $arrUsers)) { 
+      $isValid = true; 
+    } 
+    // Or, you may restrict access to only certain users based on their username. 
+    if (in_array($UserGroup, $arrGroups)) { 
+      $isValid = true; 
+    } 
+    if (($strUsers == "") && true) { 
+      $isValid = true; 
+    } 
+  } 
+  return $isValid; 
+}
+
+$MM_restrictGoTo = "index.php";
+if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers, $_SESSION['MM_Username'], $_SESSION['MM_UserGroup'])))) {   
+  $MM_qsChar = "?";
+  $MM_referrer = $_SERVER['PHP_SELF'];
+  if (strpos($MM_restrictGoTo, "?")) $MM_qsChar = "&";
+  if (isset($_SERVER['QUERY_STRING']) && strlen($_SERVER['QUERY_STRING']) > 0) 
+  $MM_referrer .= "?" . $_SERVER['QUERY_STRING'];
+  $MM_restrictGoTo = $MM_restrictGoTo. $MM_qsChar . "accesscheck=" . urlencode($MM_referrer);
+  header("Location: ". $MM_restrictGoTo); 
+  exit;
+}
+?>
 <?php
 if (!function_exists("GetSQLValueString")) {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
@@ -31,29 +105,29 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
 }
 }
 
-$editFormAction = $_SERVER['PHP_SELF'];
-if (isset($_SERVER['QUERY_STRING'])) {
-  $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
+$usuario=$_SESSION['MM_Username'];
+
+mysql_select_db($database_con01, $con01);
+$query_cs_usuario = "SELECT ac_id, ac_data, ac_nome, ac_nivelAcesso, ac_email, ac_chave, ac_situacao, ac_cadastrador, nivel_id, nivel_tipo FROM acesso, nivel WHERE ac_email='$usuario' AND ac_nivelAcesso=nivel_id";
+$cs_usuario = mysql_query($query_cs_usuario, $con01) or die(mysql_error());
+$row_cs_usuario = mysql_fetch_assoc($cs_usuario);
+$totalRows_cs_usuario = mysql_num_rows($cs_usuario);
+
+$colname_cs_curriculo = "-1";
+if (isset($_POST['cargo'])) {
+  $colname_cs_curriculo = $_POST['cargo'];
 }
+mysql_select_db($database_con01, $con01);
+$query_cs_curriculo = sprintf("SELECT arq_id, arq_data, arq_nome, arq_fone, arq_cargo, arq_curriculo, arq_diretorio, cargo_id, cargo_nome FROM arquivo, cargo WHERE arq_cargo = %s AND arq_cargo=cargo_id ORDER BY arq_data DESC", GetSQLValueString($colname_cs_curriculo, "int"));
+$cs_curriculo = mysql_query($query_cs_curriculo, $con01) or die(mysql_error());
+$row_cs_curriculo = mysql_fetch_assoc($cs_curriculo);
+$totalRows_cs_curriculo = mysql_num_rows($cs_curriculo);
 
-if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
-  $insertSQL = sprintf("INSERT INTO arquivo (arq_data, arq_nome, arq_fone, arq_curriculo, arq_diretorio) VALUES (%s, %s, %s, %s, %s)",
-                       GetSQLValueString($_POST['arq_data'], "date"),
-                       GetSQLValueString($_POST['arq_nome'], "text"),
-                       GetSQLValueString($_POST['arq_fone'], "text"),
-                       GetSQLValueString($_POST['arq_curriculo'], "blob"),
-                       GetSQLValueString($_POST['arq_diretorio'], "text"));
-
-  mysql_select_db($database_con01, $con01);
-  $Result1 = mysql_query($insertSQL, $con01) or die(mysql_error());
-
-  $insertGoTo = "curriculo.php";
-  if (isset($_SERVER['QUERY_STRING'])) {
-    $insertGoTo .= (strpos($insertGoTo, '?')) ? "&" : "?";
-    $insertGoTo .= $_SERVER['QUERY_STRING'];
-  }
-  header(sprintf("Location: %s", $insertGoTo));
-}
+mysql_select_db($database_con01, $con01);
+$query_cs_cargo = "SELECT cargo_id, cargo_nome FROM cargo ORDER BY cargo_nome ASC";
+$cs_cargo = mysql_query($query_cs_cargo, $con01) or die(mysql_error());
+$row_cs_cargo = mysql_fetch_assoc($cs_cargo);
+$totalRows_cs_cargo = mysql_num_rows($cs_cargo);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -62,8 +136,8 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72548584-1"></script>
-      <script src="SpryAssets/SpryValidationTextField.js" type="text/javascript"></script>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-72548584-1"></script>
+      <script src="SpryAssets/SpryValidationSelect.js" type="text/javascript"></script>
       <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
@@ -96,12 +170,12 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
   <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet">
   <link href="assets/vendor/venobox/venobox.css" rel="stylesheet">
   <link href="assets/vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
+
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
 
-<link href="SpryAssets/SpryValidationTextField.css" rel="stylesheet" type="text/css">
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+  <script src='https://www.google.com/recaptcha/api.js'></script>
+<link href="SpryAssets/SpryValidationSelect.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -118,11 +192,8 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
 
       <nav id="nav-menu-container">
         <ul class="nav-menu">
-          <li class="menu-active"><a href="index.php">Inicio</a></li>
-          <li><a href="index.php">A Empresa</a></li>
-          <li><a href="index.php">Produtos</a></li>
-          <li><a href="#">Administra</a></li>
-          <li><a href="index.php">Contato</a></li>
+          <li class="menu-active"><a href="#">Inicio</a></li>
+          <li><a href="<?php echo $logoutAction ?>">Sair</a></li>
         </ul>
       </nav><!-- #nav-menu-container -->
     </div>
@@ -219,45 +290,84 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
   <main id="main">
 
     <!-- ======= Contact Section ======= -->
-    <section id="contact" class="section-bg wow fadeInUp">      
+    <section id="contact" class="section-bg wow fadeInUp">
+      <div class="container">
 
-      <div id="login">
-        <div class="container">
-            <div id="login-row" class="row justify-content-center align-items-center">
-                <div id="login-column" class="col-md-6">
-                  <div id="login-box" class="col-md-12">                   
-                          <h3 class="text-center text-info">Cadastra Curriculo</h3>
-                          <br>
-                           <form method="post" name="form1" action="validaCurriculo.php" enctype="multipart/form-data">
-                            <table align="center">
-                              <tr valign="baseline">
-                                <td nowrap align="right">Data:</td>
-                                <td><input type="text" name="arq_data" value="" size="20"></td>
-                              </tr>
-                              <tr valign="baseline">
-                                <td nowrap align="right">Nome:</td>
-                                <td><input type="text" name="arq_nome" value="" size="20"></td>
-                              </tr>
-                              <tr valign="baseline">
-                                <td nowrap align="right">Telefone:</td>
-                                <td><input type="text" name="arq_telefone" value="" size="20"></td>
-                              </tr>
-                              <tr valign="baseline">
-                                <td nowrap align="right">Curriculo:</td>
-                                <td><input type="file" name="arq_curriculo" value="" size="20"></td>
-                              </tr>
-                              <tr valign="baseline">
-                                <td nowrap align="right">&nbsp;</td>
-                                <td><input type="submit" value="Cadastrar"></td>
-                              </tr>
-                            </table>
-                            <input type="hidden" name="MM_insert" value="form1">
-                          </form>
-                  </div>
-                </div>
-            </div>
+        <div class="section-header">
+          <h3>Administração</h3>
         </div>
-    </div>
+        <div class="form">         
+          <p>
+          <?php 
+  		       
+             $nivel=$row_cs_usuario['nivel_tipo'];
+  		       echo 'Usuario: '.$usuario;
+             echo '<br>'; 
+      			 $data=date('Y-m-d');
+      			 echo 'Data:  '.$data;
+             echo '<hr>'; 
+    		  ?>
+          </p>
+            <!-- Criado o formulário para o usuário colocar os dados de acesso.  -->
+          <form name="form1" method="post" action="">          
+            <table width="449" border="0" cellspacing="5" cellpadding="5">
+            <tr>
+              <td width="149">Selecione o cargo:</td>
+              <td width="129">
+                <span id="spryselect1">
+                  <select name="cargo" id="cargo">
+                    <option value="0">Selecione</option>
+                    <?php
+            					do {  
+            					?>
+                      <option value="<?php echo $row_cs_cargo['cargo_id']?>"><?php echo $row_cs_cargo['cargo_nome']?></option>
+                       <?php
+            					} while ($row_cs_cargo = mysql_fetch_assoc($cs_cargo));
+            					  $rows = mysql_num_rows($cs_cargo);
+            					  if($rows > 0) {
+            						  mysql_data_seek($cs_cargo, 0);
+            						  $row_cs_cargo = mysql_fetch_assoc($cs_cargo);
+            					  }
+            					?>
+                  </select>
+                  <span class="selectInvalidMsg">Invalido.</span><span class="selectRequiredMsg">Invalido.</span></span>
+              </td>
+              <td width="113"><input type="submit" name="Consultar" id="Consultar" value="Consultar"></td>
+            </tr>
+          </table>
+          </form>
+          <h3>Curriculos Cadastrados</h3>
+          <?php
+            $res=$totalRows_cs_curriculo;                       
+            if($res>0)
+            {?> 
+          <table border="0" cellpadding="5" cellspacing="5">
+            <tr>
+              <td>Data</td>
+              <td>Nome</td>
+              <td>Telefone</td>
+              <td>Cargo</td>
+              <td>Curriculo</td>
+            </tr>
+            <?php do { ?>
+              <tr>
+                <td><?php echo $row_cs_curriculo['arq_data']; ?></td>
+                <td><?php echo $row_cs_curriculo['arq_nome']; ?></td>
+                <td><?php echo $row_cs_curriculo['arq_fone']; ?></td>
+                <td><?php echo $row_cs_curriculo['cargo_nome']; ?></td>
+                <td><a href="acervo/<?= $row_cs_curriculo['arq_curriculo']; ?>" target="_blank"><?php echo $row_cs_curriculo['arq_curriculo']; ?></a></td>               
+                
+              </tr>
+              <?php } while ($row_cs_curriculo = mysql_fetch_assoc($cs_curriculo)); ?>
+          </table>
+          <?php } else {         
+                     
+          echo "Não foi encontrado nenhum registro.";
+         }
+         ?>
+        </div>
+
+      </div>
     </section><!-- End Contact Section -->
 
   </main><!-- End #main -->
@@ -327,25 +437,34 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
 
   <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
   <!-- Vendor JS Files -->
-<script src="assets/vendor/jquery/jquery.min.js"></script>
-<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="assets/vendor/jquery.easing/jquery.easing.min.js"></script>
-<script src="assets/vendor/php-email-form/validate.js"></script>
-<script src="assets/vendor/wow/wow.min.js"></script>
-<script src="assets/vendor/waypoints/jquery.waypoints.min.js"></script>
-<script src="assets/vendor/counterup/counterup.min.js"></script>
-<script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-<script src="assets/vendor/venobox/venobox.min.js"></script>
-<script src="assets/vendor/owl.carousel/owl.carousel.min.js"></script>
-<script src="assets/vendor/superfish/superfish.min.js"></script>
-<script src="assets/vendor/hoverIntent/hoverIntent.js"></script>
-<script src="assets/vendor/jquery-touchswipe/jquery.touchSwipe.min.js"></script>
+  <script src="assets/vendor/jquery/jquery.min.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/wow/wow.min.js"></script>
+  <script src="assets/vendor/waypoints/jquery.waypoints.min.js"></script>
+  <script src="assets/vendor/counterup/counterup.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/venobox/venobox.min.js"></script>
+  <script src="assets/vendor/owl.carousel/owl.carousel.min.js"></script>
+  <script src="assets/vendor/superfish/superfish.min.js"></script>
+  <script src="assets/vendor/hoverIntent/hoverIntent.js"></script>
+  <script src="assets/vendor/jquery-touchswipe/jquery.touchSwipe.min.js"></script>
 
   <!-- Template Main JS File -->
-<script src="assets/js/main.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
-
+  <script src="assets/js/main.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+<script type="text/javascript">
+var spryselect1 = new Spry.Widget.ValidationSelect("spryselect1", {invalidValue:"0"});
+  </script>
 </body>
 
 </html>
+<?php
+mysql_free_result($cs_usuario);
+
+mysql_free_result($cs_curriculo);
+
+mysql_free_result($cs_cargo);
+?>

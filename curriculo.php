@@ -1,44 +1,3 @@
-<?php require_once('Connections/con01.php'); ?>
-<?php
-if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-  }
-
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
-
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
-  }
-  return $theValue;
-}
-}
-
-//consulta cargo
-mysql_select_db($database_con01, $con01);
-$query_cs_cargo = "SELECT cargo_id, cargo_nome FROM cargo ORDER BY cargo_nome ASC";
-$cs_cargo = mysql_query($query_cs_cargo, $con01) or die(mysql_error());
-$row_cs_cargo = mysql_fetch_assoc($cs_cargo);
-$totalRows_cs_cargo = mysql_num_rows($cs_cargo);
-
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -89,6 +48,8 @@ $totalRows_cs_cargo = mysql_num_rows($cs_cargo);
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 
 <link href="SpryAssets/SpryValidationSelect.css" rel="stylesheet" type="text/css">
+
+<script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 
 <body>
@@ -211,10 +172,8 @@ $totalRows_cs_cargo = mysql_num_rows($cs_cargo);
       <div class="container">
   <div class="row justify-content-center">
     <div class="col-12 col-md-8 col-lg-6 pb-5">
-
-
                     <!--Form with header-->
-                    <form action="validaCurriculo.php" method="post" name="form1" enctype="multipart/form-data">
+                    <form action="validaCurriculo.php" method="POST" name="form1" enctype="multipart/form-data">
                         <div class="card border-primary rounded-0">
                             <div class="card-header p-0">
                                 <div class="bg-info text-white text-center py-2">
@@ -259,22 +218,10 @@ $totalRows_cs_cargo = mysql_num_rows($cs_cargo);
                                         <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fa fa-database text-info"></i></div>
                                         </div>
-                                    <span id="spryselect1">
-                                    <select name="arq_cargo" id="arq_cargo">
-                                      <option value="0">Selecione...</option>
+                                    <span id="spryselect1">                                    
                                       <?php
-										do {  
-										?>
-                                      <option value="<?php echo $row_cs_cargo['cargo_id']?>"><?php echo $row_cs_cargo['cargo_nome']?></option>
-                                      <?php
-										} while ($row_cs_cargo = mysql_fetch_assoc($cs_cargo));
-										  $rows = mysql_num_rows($cs_cargo);
-										  if($rows > 0) {
-											  mysql_data_seek($cs_cargo, 0);
-											  $row_cs_cargo = mysql_fetch_assoc($cs_cargo);
-										  }
-										?>
-                                    </select>
+                                        include('Connections/cs_cargo.php');
+                                      ?>
                                   <span class="selectInvalidMsg">Selecione um item válido.</span><span class="selectRequiredMsg">Selecione um item.</span></span></div>
                                 </div>
 
@@ -288,6 +235,9 @@ $totalRows_cs_cargo = mysql_num_rows($cs_cargo);
                                 </div>
 
                                 <div class="text-center">
+                                  <!--
+                                  <div class="g-recaptcha" id="grecaptcha" data-sitekey="6LdQWbgUAAAAAGwj9TuXBsCwxBn_rZSr4SXlbftA"></div>
+                                    <br>-->
                                     <input type="submit" value="Enviar" class="btn btn-info btn-block rounded-0 py-2">
                                 </div>
                             </div>
@@ -393,5 +343,5 @@ var sprytextfield2 = new Spry.Widget.ValidationTextField("sprytextfield2", "cust
 var spryselect1 = new Spry.Widget.ValidationSelect("spryselect1", {invalidValue:"0", validateOn:["blur"]});
 </script>
 </body>
-
 </html>
+

@@ -1,4 +1,4 @@
-<?php require_once('Connections/con01.php'); ?>
+<?php require_once('Connections/con02.php'); ?>
 <?php
 if (!function_exists("GetSQLValueString")) {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
@@ -31,14 +31,11 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
 }
 }
 
-mysql_select_db($database_con01, $con01);
-$query_cs_acesso = "SELECT ac_id, ac_data, ac_nome, ac_nivelAcesso, ac_email, ac_chave, ac_situacao, ac_cadastrador FROM acesso";
-$cs_acesso = mysql_query($query_cs_acesso, $con01) or die(mysql_error());
-$row_cs_acesso = mysql_fetch_assoc($cs_acesso);
-$totalRows_cs_acesso = mysql_num_rows($cs_acesso);
-
-  //Inicializado primeira a sessão para posteriormente recuperar valores das variáveis globais. 
-    session_start();
+mysql_select_db($database_con02, $con02);
+$query_cs_usuario = "SELECT ac_id, ac_data, ac_nome, ac_nivelAcesso, ac_email, ac_chave, ac_situacao, ac_cadastrador FROM acesso";
+$cs_usuario = mysql_query($query_cs_usuario, $con02) or die(mysql_error());
+$row_cs_usuario = mysql_fetch_assoc($cs_usuario);
+$totalRows_cs_usuario = mysql_num_rows($cs_usuario);
 ?>
 <?php
 // *** Validate request to login to this site.
@@ -56,14 +53,14 @@ if (isset($_POST['email'])) {
   $password=$_POST['senha'];
   $MM_fldUserAuthorization = "";
   $MM_redirectLoginSuccess = "administrativo.php";
-  $MM_redirectLoginFailed = "administra.php";
+  $MM_redirectLoginFailed = "index.php";
   $MM_redirecttoReferrer = false;
-  mysql_select_db($database_con01, $con01);
+  mysql_select_db($database_con02, $con02);
   
   $LoginRS__query=sprintf("SELECT ac_email, ac_chave FROM acesso WHERE ac_email=%s AND ac_chave=%s",
     GetSQLValueString($loginUsername, "text"), GetSQLValueString($password, "text")); 
    
-  $LoginRS = mysql_query($LoginRS__query, $con01) or die(mysql_error());
+  $LoginRS = mysql_query($LoginRS__query, $con02) or die(mysql_error());
   $loginFoundUser = mysql_num_rows($LoginRS);
   if ($loginFoundUser) {
      $loginStrGroup = "";
@@ -258,7 +255,7 @@ if (isset($_POST['email'])) {
             <div id="login-row" class="row justify-content-center align-items-center">
                 <div id="login-column" class="col-md-6">
                     <div id="login-box" class="col-md-12">
-                        <form id="login-form" class="form" action="<?php echo $loginFormAction; ?>" method="POST">
+                        <form id="login-form" class="form" method="POST" action="<?php echo $loginFormAction; ?>">
                             <h3 class="text-center text-info">Acesso Restrito</h3>
                             <div class="form-group">
                                 <label for="email" class="text-info">Email:</label><br>
@@ -273,9 +270,9 @@ if (isset($_POST['email'])) {
                                   <input name="senha" type="password" id="senha" size="35" maxlength="20">
                                   <span class="textfieldRequiredMsg">Um valor é necessário.</span><span class="textfieldMaxCharsMsg">Limite 20 caracteres.</span></span><br>
                                 </p>
-</div>
+                             </div>
                             <div class="form-group">
-                                <!--      
+        <!--     
                                 <div class="g-recaptcha" id="grecaptcha" data-sitekey="6LdQWbgUAAAAAGwj9TuXBsCwxBn_rZSr4SXlbftA"></div>
                                     <br>-->
                                     <input type="submit" name="entrar" id="entrar" class="btn btn-info btn-md" value="Acessar">
@@ -381,5 +378,5 @@ var sprytextfield2 = new Spry.Widget.ValidationTextField("sprytextfield2", "none
 
 </html>
 <?php
-mysql_free_result($cs_acesso);
+mysql_free_result($cs_usuario);
 ?>

@@ -1,15 +1,14 @@
 <?php
 /*
-# FileName="Connection_php_mysql.htm"
-# Type="MYSQL"
-# HTTP="true"
 $hostname_liga01 = "localhost:3306";
-$database_liga01 = "metalcapnet_metalcap";
+$database_liga01 = "metalcapnet_principal";
 $username_liga01 = "metalcapnet";
 $password_liga01 = "1404=A2b4m915";
 $liga01 = mysql_pconnect($hostname_liga01, $username_liga01, $password_liga01) or trigger_error(mysql_error(),E_USER_ERROR); 
-if(! $liga01 ) {
+if(!$liga01 ) {
 die('Could not connect: ' . mysql_error());
+}else {
+	//echo "conexao realizada com sucesso!";
 }
 */
 # FileName="Connection_php_mysql.htm"

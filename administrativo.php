@@ -1,4 +1,4 @@
-'<?php require_once('Connections/con01.php'); ?>
+<?php require_once('Connections/con02.php'); ?>
 <?php
 //initialize the session
 if (!isset($_SESSION)) {
@@ -71,6 +71,8 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers,
   header("Location: ". $MM_restrictGoTo); 
   exit;
 }
+
+$usuario=$_SESSION['MM_Username'];
 ?>
 <?php
 if (!function_exists("GetSQLValueString")) {
@@ -104,29 +106,27 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
 }
 }
 
-$usuario=$_SESSION['MM_Username'];
+mysql_select_db($database_con02, $con02);
+$query_cs_usuarios = "SELECT ac_id, ac_data, ac_nome, ac_nivelAcesso, ac_email, ac_chave, ac_situacao, ac_cadastrador FROM acesso";
+$cs_usuarios = mysql_query($query_cs_usuarios, $con02) or die(mysql_error());
+$row_cs_usuarios = mysql_fetch_assoc($cs_usuarios);
+$totalRows_cs_usuarios = mysql_num_rows($cs_usuarios);
 
-mysql_select_db($database_con01, $con01);
-$query_cs_usuario = "SELECT ac_id, ac_data, ac_nome, ac_nivelAcesso, ac_email, ac_chave, ac_situacao, ac_cadastrador, nivel_id, nivel_tipo FROM acesso, nivel WHERE ac_email='$usuario' AND ac_nivelAcesso=nivel_id";
-$cs_usuario = mysql_query($query_cs_usuario, $con01) or die(mysql_error());
-$row_cs_usuario = mysql_fetch_assoc($cs_usuario);
-$totalRows_cs_usuario = mysql_num_rows($cs_usuario);
+mysql_select_db($database_con02, $con02);
+$query_cs_cargo = "SELECT cargo_id, cargo_nome FROM cargo ORDER BY cargo_nome ASC";
+$cs_cargo = mysql_query($query_cs_cargo, $con02) or die(mysql_error());
+$row_cs_cargo = mysql_fetch_assoc($cs_cargo);
+$totalRows_cs_cargo = mysql_num_rows($cs_cargo);
 
 $colname_cs_curriculo = "-1";
 if (isset($_POST['cargo'])) {
   $colname_cs_curriculo = $_POST['cargo'];
 }
-mysql_select_db($database_con01, $con01);
-$query_cs_curriculo = sprintf("SELECT arq_id, arq_data, arq_nome, arq_fone, arq_cargo, arq_curriculo, arq_diretorio, cargo_id, cargo_nome FROM arquivo, cargo WHERE arq_cargo = %s AND arq_cargo=cargo_id ORDER BY arq_data DESC", GetSQLValueString($colname_cs_curriculo, "int"));
-$cs_curriculo = mysql_query($query_cs_curriculo, $con01) or die(mysql_error());
+mysql_select_db($database_con02, $con02);
+$query_cs_curriculo = sprintf("SELECT arq_id, arq_data, arq_nome, arq_fone, arq_cargo, arq_curriculo, arq_diretorio, cargo_id, cargo_nome FROM arquivo, cargo WHERE arq_cargo = %s AND arq_cargo=cargo_id", GetSQLValueString($colname_cs_curriculo, "int"));
+$cs_curriculo = mysql_query($query_cs_curriculo, $con02) or die(mysql_error());
 $row_cs_curriculo = mysql_fetch_assoc($cs_curriculo);
 $totalRows_cs_curriculo = mysql_num_rows($cs_curriculo);
-
-mysql_select_db($database_con01, $con01);
-$query_cs_cargo = "SELECT cargo_id, cargo_nome FROM cargo ORDER BY cargo_nome ASC";
-$cs_cargo = mysql_query($query_cs_cargo, $con01) or die(mysql_error());
-$row_cs_cargo = mysql_fetch_assoc($cs_cargo);
-$totalRows_cs_cargo = mysql_num_rows($cs_cargo);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -296,17 +296,13 @@ $totalRows_cs_cargo = mysql_num_rows($cs_cargo);
           <h3>Administração</h3>
         </div>
         <div class="form">         
-          <p>
           <?php 
-  		       
-             $nivel=$row_cs_usuario['nivel_tipo'];
-  		       echo 'Usuario: '.$usuario;
+  		     echo 'Usuario: '.$usuario;
              echo '<br>'; 
       			 $data=date('Y-m-d');
       			 echo 'Data:  '.$data;
              echo '<hr>'; 
     		  ?>
-          </p>
             <!-- Criado o formulário para o usuário colocar os dados de acesso.  -->
           <form name="form1" method="post" action="">          
             <table width="449" border="0" cellspacing="5" cellpadding="5">
@@ -317,17 +313,17 @@ $totalRows_cs_cargo = mysql_num_rows($cs_cargo);
                   <select name="cargo" id="cargo">
                     <option value="0">Selecione</option>
                     <?php
-            					do {  
-            					?>
-                      <option value="<?php echo $row_cs_cargo['cargo_id']?>"><?php echo $row_cs_cargo['cargo_nome']?></option>
-                       <?php
-            					} while ($row_cs_cargo = mysql_fetch_assoc($cs_cargo));
-            					  $rows = mysql_num_rows($cs_cargo);
-            					  if($rows > 0) {
-            						  mysql_data_seek($cs_cargo, 0);
-            						  $row_cs_cargo = mysql_fetch_assoc($cs_cargo);
-            					  }
-            					?>
+do {  
+?>
+                    <option value="<?php echo $row_cs_cargo['cargo_id']?>"><?php echo $row_cs_cargo['cargo_nome']?></option>
+                    <?php
+} while ($row_cs_cargo = mysql_fetch_assoc($cs_cargo));
+  $rows = mysql_num_rows($cs_cargo);
+  if($rows > 0) {
+      mysql_data_seek($cs_cargo, 0);
+	  $row_cs_cargo = mysql_fetch_assoc($cs_cargo);
+  }
+?>
                   </select>
                   <span class="selectInvalidMsg">Invalido.</span><span class="selectRequiredMsg">Invalido.</span></span>
               </td>
@@ -454,16 +450,14 @@ $totalRows_cs_cargo = mysql_num_rows($cs_cargo);
   <script src="assets/js/main.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
-<script type="text/javascript">
-var spryselect1 = new Spry.Widget.ValidationSelect("spryselect1", {invalidValue:"0"});
-  </script>
+
 </body>
 
 </html>
 <?php
-mysql_free_result($cs_usuario);
-
-mysql_free_result($cs_curriculo);
+mysql_free_result($cs_usuarios);
 
 mysql_free_result($cs_cargo);
+
+mysql_free_result($cs_curriculo);
 ?>
