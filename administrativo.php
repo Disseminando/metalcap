@@ -198,93 +198,7 @@ $totalRows_cs_curriculo = mysql_num_rows($cs_curriculo);
     </div>
   </header><!-- End Header -->
 
-  <!-- ======= Intro Section ======= -->
-  <section id="intro">
-    <div class="intro-container">
-      <div id="introCarousel" class="carousel  slide carousel-fade" data-ride="carousel">
-
-        <ol class="carousel-indicators"></ol>
-
-        <div class="carousel-inner" role="listbox">
-
-          <div class="carousel-item active">
-            <div class="carousel-background"><img src="assets/img/intro-carousel/1.jpg" alt=""></div>
-            <div class="carousel-container">
-              <div class="carousel-content">
-                <h2>Coleta Sucata</h2>
-              </div>
-            </div>
-          </div>
-
-          <div class="carousel-item">
-            <div class="carousel-background"><img src="assets/img/intro-carousel/2.jpg" alt=""></div>
-            <div class="carousel-container">
-              <div class="carousel-content">
-                <h2>Coleta Sucata</h2>
-              </div>
-            </div>
-          </div>
-
-          <div class="carousel-item">
-            <div class="carousel-background"><img src="assets/img/intro-carousel/3.jpg" alt=""></div>
-            <div class="carousel-container">
-              <div class="carousel-content">
-               <h2>Coleta Sucata</h2>
-              </div>
-            </div>
-          </div>
-
-          <div class="carousel-item">
-            <div class="carousel-background"><img src="assets/img/intro-carousel/4.jpg" alt=""></div>
-            <div class="carousel-container">
-              <div class="carousel-content">
-                <h2>Coleta Sucata</h2>
-              </div>
-            </div>
-          </div>
-
-          <div class="carousel-item">
-            <div class="carousel-background"><img src="assets/img/intro-carousel/5.jpg" alt=""></div>
-            <div class="carousel-container">
-              <div class="carousel-content">
-                <h2>Prensa Sucatas</h2>
-              </div>
-            </div>
-          </div>
-
-          <div class="carousel-item">
-            <div class="carousel-background"><img src="assets/img/intro-carousel/6.jpg" alt=""></div>
-            <div class="carousel-container">
-              <div class="carousel-content">
-                <h2>Coleta Sucatas</h2>
-              </div>
-            </div>
-          </div>
-
-          <div class="carousel-item">
-            <div class="carousel-background"><img src="assets/img/intro-carousel/7.jpg" alt=""></div>
-            <div class="carousel-container">
-              <div class="carousel-content">
-                <h2>Coleta Sucatas</h2>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <a class="carousel-control-prev" href="#introCarousel" role="button" data-slide="prev">
-          <span class="carousel-control-prev-icon ion-chevron-left" aria-hidden="true"></span>
-          <span class="sr-only">Previous</span>
-        </a>
-
-        <a class="carousel-control-next" href="#introCarousel" role="button" data-slide="next">
-          <span class="carousel-control-next-icon ion-chevron-right" aria-hidden="true"></span>
-          <span class="sr-only">Next</span>
-        </a>
-
-      </div>
-    </div>
-  </section><!-- End Intro Section -->
+  
 
   <main id="main">
 
@@ -297,6 +211,7 @@ $totalRows_cs_curriculo = mysql_num_rows($cs_curriculo);
         </div>
         <div class="form">         
           <?php 
+  		     
   		     echo 'Usuario: '.$usuario;
              echo '<br>'; 
       			 $data=date('Y-m-d');

@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /acervo/
+Disallow: /assets/
+Disallow: /Connections/
+Disallow: /SpryAssets/

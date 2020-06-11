@@ -173,7 +173,7 @@
   <div class="row justify-content-center">
     <div class="col-12 col-md-8 col-lg-6 pb-5">
                     <!--Form with header-->
-                    <form action="validaCurriculo.php" method="POST" name="form1" enctype="multipart/form-data">
+                    <form action="validaCurriculo.php" method="POST" name="form1" enctype="multipart/form-data" onsubmit="validaCaptcha()">
                         <div class="card border-primary rounded-0">
                             <div class="card-header p-0">
                                 <div class="bg-info text-white text-center py-2">
@@ -235,9 +235,9 @@
                                 </div>
 
                                 <div class="text-center">
-                                  <!--
+                                <!--captcha do google -->                                 
                                   <div class="g-recaptcha" id="grecaptcha" data-sitekey="6LdQWbgUAAAAAGwj9TuXBsCwxBn_rZSr4SXlbftA"></div>
-                                    <br>-->
+                                    <br>
                                     <input type="submit" value="Enviar" class="btn btn-info btn-block rounded-0 py-2">
                                 </div>
                             </div>
@@ -341,6 +341,19 @@
 var sprytextfield1 = new Spry.Widget.ValidationTextField("sprytextfield1");
 var sprytextfield2 = new Spry.Widget.ValidationTextField("sprytextfield2", "custom", {pattern:"(xx)xxxxx-xxxx", validateOn:["change"], useCharacterMasking:true});
 var spryselect1 = new Spry.Widget.ValidationSelect("spryselect1", {invalidValue:"0", validateOn:["blur"]});
+</script>
+
+<script type="text/javascript">
+  function validaCaptcha(){
+
+    if(grecaptcha.getResponse() == ""){
+        alert("Favor marcar o Captcha!");
+        window.location("index.php")
+        return false;
+    }
+
+  }
+
 </script>
 </body>
 </html>

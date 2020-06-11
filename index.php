@@ -277,12 +277,12 @@
               <div class="img">
                 <img src="assets/img/consciencia01.jpg" alt="" class="img-fluid">
               </div>
-              <h2 class="title"><a href="#">Reciclagem de aluminio</a></h2>
+              <h2 class="title"><a href="#">Reciclagem de Cobre</a></h2>
               <div class="container">
               <div class="row justify-content-center">
-              	<!-- width="345" height="285"-->              
+              	<!-- Area dos videos width="345" height="285"-->              
 
-                <iframe width="345" height="285" src="https://www.youtube.com/embed/9EgJLNAlrV4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> 
+                <iframe width="345" height="285" src="https://www.youtube.com/embed/U2AIiHfZPiE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
               </div>
             </div>
               
@@ -334,6 +334,62 @@
               <div class="portfolio-info">
                 <h4><a href="#">Gerador Eletrico 330 Kva</a></h4>
                 <p style="color: red">R$ 55.000</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-venda wow fadeInUp" data-wow-delay="0.2s">
+            <div class="portfolio-wrap">
+              <figure>
+                <img src="assets/img/portfolio/5cv.JPEG" class="img-fluid" alt="bomba d'agua">
+                <a href="assets/img/portfolio/5cv.JPEG" class="link-preview venobox" data-gall="portfolioGallery" title="Bomba d'agua 5cv"><i class="ion ion-eye"></i></a>
+              </figure>
+
+              <div class="portfolio-info">
+                <h4><a href="#">Bomba d'agua 5cv</a></h4>
+                <p style="color: red">R$ 350,00</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-venda wow fadeInUp" data-wow-delay="0.2s">
+            <div class="portfolio-wrap">
+              <figure>
+                <img src="assets/img/portfolio/12cv.png" class="img-fluid" alt="bomba d'agua">
+                <a href="assets/img/portfolio/12cv.png" class="link-preview venobox" data-gall="portfolioGallery" title="bomba d'agua 12cv"><i class="ion ion-eye"></i></a>
+              </figure>
+
+              <div class="portfolio-info">
+                <h4><a href="#">Bomba d'agua 12.5cv</a></h4>
+                <p style="color: red">R$ 875,00</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-venda wow fadeInUp" data-wow-delay="0.2s">
+            <div class="portfolio-wrap">
+              <figure>
+                <img src="assets/img/portfolio/50cv.png" class="img-fluid" alt="bomba d'agua">
+                <a href="assets/img/portfolio/50cv.png" class="link-preview venobox" data-gall="portfolioGallery" title="bomba d'agua 50cv"><i class="ion ion-eye"></i></a>
+              </figure>
+
+              <div class="portfolio-info">
+                <h4><a href="#">Bomba d'agua 50cv</a></h4>
+                <p style="color: red">R$ 3500/p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-venda wow fadeInUp" data-wow-delay="0.2s">
+            <div class="portfolio-wrap">
+              <figure>
+                <img src="assets/img/portfolio/20cv.png" class="img-fluid" alt="bomba d'agua">
+                <a href="assets/img/portfolio/20cv.png" class="link-preview venobox" data-gall="portfolioGallery" title="bomba d'agua 20cv"><i class="ion ion-eye"></i></a>
+              </figure>
+
+              <div class="portfolio-info">
+                <h4><a href="#">Bomba d'agua 20cv</a></h4>
+                <p style="color: red">R$ 1400/p>
               </div>
             </div>
           </div>

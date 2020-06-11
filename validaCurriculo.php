@@ -171,8 +171,17 @@
           <div class="row">
           <div class="col">         
                   <?php 
+
+                  $script = EOT
+                  function validaCaptcha(){
+                    if(grecaptcha.getResponse() == ""){
+                        alert("Favor marcar o Captcha!");
+                        window.location("index.php")
+                        return false;
+                  }
+                  EOT;
      								
-									 if(isset($_FILES['arq_curriculo'])){
+									if(isset($_FILES['arq_curriculo'])){
 									
 									$data = $_POST['arq_data'];
 									$data = explode("/", $data);

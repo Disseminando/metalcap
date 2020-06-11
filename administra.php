@@ -255,7 +255,7 @@ if (isset($_POST['email'])) {
             <div id="login-row" class="row justify-content-center align-items-center">
                 <div id="login-column" class="col-md-6">
                     <div id="login-box" class="col-md-12">
-                        <form id="login-form" class="form" method="POST" action="<?php echo $loginFormAction; ?>">
+                        <form id="login-form" class="form" method="POST" action="<?php echo $loginFormAction; ?>" onsubmit="valida()">
                             <h3 class="text-center text-info">Acesso Restrito</h3>
                             <div class="form-group">
                                 <label for="email" class="text-info">Email:</label><br>
@@ -271,12 +271,11 @@ if (isset($_POST['email'])) {
                                   <span class="textfieldRequiredMsg">Um valor é necessário.</span><span class="textfieldMaxCharsMsg">Limite 20 caracteres.</span></span><br>
                                 </p>
                              </div>
-                            <div class="form-group">
-        <!--     
+                              <div class="form-group">                                     
                                 <div class="g-recaptcha" id="grecaptcha" data-sitekey="6LdQWbgUAAAAAGwj9TuXBsCwxBn_rZSr4SXlbftA"></div>
-                                    <br>-->
+                                    <br>
                                     <input type="submit" name="entrar" id="entrar" class="btn btn-info btn-md" value="Acessar">
-                                </div>
+                              </div>
                         </form>
                     </div>
                 </div>
@@ -373,6 +372,19 @@ if (isset($_POST['email'])) {
 <script type="text/javascript">
 var sprytextfield1 = new Spry.Widget.ValidationTextField("sprytextfield1", "email", {validateOn:["blur"], useCharacterMasking:true});
 var sprytextfield2 = new Spry.Widget.ValidationTextField("sprytextfield2", "none", {validateOn:["blur"], maxChars:20});
+</script>
+
+<script type="text/javascript">
+  function valida(){
+
+    if(grecaptcha.getResponse() == ""){
+        alert("Favor marcar o Captcha!");
+        window.location("index.php")
+        return false;
+    }
+
+  }
+
 </script>
 </body>
 
